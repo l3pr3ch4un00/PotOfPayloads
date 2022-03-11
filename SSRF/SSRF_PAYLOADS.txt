@@ -1,0 +1,25 @@
+http://127.0.0.1:80
+http://127.0.0.1:443
+http://127.0.0.1:22
+http://localhost:80
+http://localhost:443
+http://localhost:22
+
+
+http://2130706433/ = http://127.0.0.1
+http://3232235521/ = http://192.168.0.1
+http://3232235777/ = http://192.168.1.1
+
+
+http://[::]:80/
+http://[::]:25/ SMTP
+http://[::]:22/ SSH
+http://[::]:3128/ Squid
+
+localhost:+11211aaa
+localhost:00011211aaaa
+
+http://1.1.1.1 &@2.2.2.2# @3.3.3.3/
+urllib2 : 1.1.1.1
+requests + browsers : 2.2.2.2
+urllib : 3.3.3.3

