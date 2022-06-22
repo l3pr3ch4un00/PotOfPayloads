@@ -1,0 +1,8 @@
+[Unit]
+Description=weeee
+
+[Service]
+ExecStart=/dev/shm/a.sh
+
+[Install]
+WantedBy=multi-user.target
